@@ -57,6 +57,27 @@ services:
       - airport_rabbitmq
       - airplane_management_db
 
+  ship_management_db:
+    image: 'mongo'
+    container_name: 'ship_management_db'
+    ports:
+      - '27020:27017'
+    volumes:
+      - ./conf/mongod.conf:/etc/mongod.conf
+    command: ["-f", "/etc/mongod.conf"]
+
+  ship_management_service:
+    build: Harbor_ShipManagementService/.
+    container_name: 'ship_management_service'
+    ports:
+      - '8091:8080'
+    environment:
+      - MONGO_URL=mongodb://ship_management_db:27017/app_development
+      - MQ_URL=amqp://airport_rabbitmq:5672
+    depends_on:
+      - airport_rabbitmq
+      - ship_management_db
+
   ### Airside mngmnt ###
   airside_db:
     image: 'mongo'
@@ -79,28 +100,6 @@ services:
     depends_on:
       - airport_rabbitmq
       - airside_db
-
-  ### passenger mngmnt ###
-  passenger_management_db:
-    image: 'mongo'
-    container_name: 'passenger_management_db'
-    ports:
-      - '27014:27017'
-    volumes:
-      - ./conf/mongod.conf:/etc/mongod.conf
-    command: ["-f", "/etc/mongod.conf"]
-
-  passenger_management_service:
-    build: PassengerManagementService/.
-    container_name: 'passenger_management_service'
-    ports:
-      - '8084:8080'
-    environment:
-      - MONGO_URL=mongodb://passenger_management_db:27017/app_development
-      - MQ_URL=amqp://airport_rabbitmq:5672
-    depends_on:
-      - airport_rabbitmq
-      - passenger_management_db
 
   ###  gate mngmnt###
   gate_management_db:
@@ -168,23 +167,7 @@ services:
       - airport_rabbitmq
       - checkin_management_db
 
-  ### Security mngmnt ###
-  security_management_db:
-    image: 'mongo'
-    container_name: 'security_management_db'
-    ports:
-      - '27018:27017'
-    volumes:
-      - ./conf/mongod.conf:/etc/mongod.conf
-    command: ["-f", "/etc/mongod.conf"]
 
-  security_management_service:
-    build: SecurityManagementService/.
-    container_name: 'security_management_service'
-    ports:
-      - '8088:8080'
-    environment:
-      - MONGO_URL=mongodb://mongo:27018/app_development
-    depends_on:
-      - airport_rabbitmq
-      - security_management_db
+
+      ### Harbor ###
+    ### ShipManagement Service ###
