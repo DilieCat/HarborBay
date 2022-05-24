@@ -2,9 +2,13 @@ const amqp = require('amqplib/callback_api');
 
 
 const { MQ_URL } = process.env;
-const queue = 'ship';
+const queue = 'harbor';
 
 const shipDenormalize = require('../controllers/shipDenormalize.controller')
+const inboundDenormalize = require('../controllers/inboundDenormalize.controller')
+const outboundDenormalize = require('../controllers/outboundDenormalize.controller')
+
+
 
 
 
@@ -35,11 +39,23 @@ amqp.connect(MQ_URL, (connectionError, connection) => {
             case 'createShip':
               shipDenormalize.ShipCreate(object)
               break;
-            case 'updateShip':
-              shipDenormalize.ShipUpdate(object)
+            case 'createInbound':
+              inboundDenormalize.InboundCreate(object)
               break;
-            case 'deleteShip':
-              shipDenormalize.ShipDelete(object)
+            case 'updateInbound':
+              inboundDenormalize.InboundUpdate(object)
+              break;
+            case 'deleteInbound':
+              inboundDenormalize.InboundDelete(object)
+              break;
+            case 'createOutbound':
+              outboundDenormalize.OutboundCreate(object)
+              break;
+            case 'updateOutbound':
+              outboundDenormalize.OutboundUpdate(object)
+              break;
+            case 'deleteOutbound':
+              outboundDenormalize.OutboundDelete(object)
               break;
             default:
               console.warn('Event Type Unknown');

@@ -1,11 +1,10 @@
-const Ship = require('../models/ship.model');
-const MQService = require('../utils/MQService.utils');
+const Ship = require('../../models/ship/ship.model');
+const MQService = require('../../utils/MQService.utils');
 
 const ShipCreate = (req, res, next) => {
   const newShip = new Ship({
     name: req.body.name,
-    maxCapicityContainers: req.body.maxCapicityContainers,
-    fuelPercentage: req.body.fuelPercentage
+    maxCapicityContainers: req.body.maxCapicityContainers
   });
 
   newShip.save(async (err) => {

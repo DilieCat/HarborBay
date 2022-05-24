@@ -78,6 +78,48 @@ services:
       - airport_rabbitmq
       - ship_management_db
 
+  shipservice_management_db:
+    image: 'mongo'
+    container_name: 'shipservice_management_db'
+    ports:
+      - '27021:27017'
+    volumes:
+      - ./conf/mongod.conf:/etc/mongod.conf
+    command: ["-f", "/etc/mongod.conf"]
+
+  shipservice_management_service:
+    build: Harbor_ShipService/.
+    container_name: 'shipservice_management_service'
+    ports:
+      - '8092:8080'
+    environment:
+      - MONGO_URL=mongodb://shipservice_management_db:27017/app_development
+      - MQ_URL=amqp://airport_rabbitmq:5672
+    depends_on:
+      - airport_rabbitmq
+      - shipservice_management_db
+
+  harbor_management_db:
+    image: 'mongo'
+    container_name: 'harbor_management_db'
+    ports:
+      - '27022:27017'
+    volumes:
+      - ./conf/mongod.conf:/etc/mongod.conf
+    command: ["-f", "/etc/mongod.conf"]
+
+  harbor_management_service:
+    build: Harbor_HarborManagementService/.
+    container_name: 'harbor_management_service'
+    ports:
+      - '8093:8080'
+    environment:
+      - MONGO_URL=mongodb://harbor_management_db:27017/app_development
+      - MQ_URL=amqp://airport_rabbitmq:5672
+    depends_on:
+      - airport_rabbitmq
+      - shipservice_management_db
+
   ### Airside mngmnt ###
   airside_db:
     image: 'mongo'

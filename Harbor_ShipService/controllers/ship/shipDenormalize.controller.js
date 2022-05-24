@@ -1,4 +1,4 @@
-const ShipRead = require('../models/shipRead.model');
+const ShipRead = require('../../models/ship/shipRead.model');
 
 const ShipCreate = (ship) => {
   const shipNew = new ShipRead(ship);

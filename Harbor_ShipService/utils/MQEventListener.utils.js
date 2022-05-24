@@ -2,9 +2,9 @@ const amqp = require('amqplib/callback_api');
 
 
 const { MQ_URL } = process.env;
-const queue = 'ship';
+const queue = 'service';
 
-const shipDenormalize = require('../controllers/shipDenormalize.controller')
+const shipDenormalize = require('../controllers/ship/shipDenormalize.controller')
 
 
 
