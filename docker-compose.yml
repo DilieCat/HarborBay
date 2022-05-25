@@ -143,6 +143,28 @@ services:
       - airport_rabbitmq
       - dock_management_db
 
+  ### public Service ###
+  public_service_db:
+    image: 'mongo'
+    container_name: 'public_service_db'
+    ports:
+      - '27024:27017'
+    volumes:
+      - ./conf/mongod.conf:/etc/mongod.conf
+    command: ["-f", "/etc/mongod.conf"]
+
+  public_service:
+    build: Harbor_PublicService/.
+    container_name: 'public_service'
+    ports:
+      - '8095:8080'
+    environment:
+      - MONGO_URL=mongodb://dock_management_db:27017/app_development
+      - MQ_URL=amqp://airport_rabbitmq:5672
+    depends_on:
+      - airport_rabbitmq
+      - dock_management_db
+
   ### Airside mngmnt ###
   airside_db:
     image: 'mongo'
