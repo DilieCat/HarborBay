@@ -46,6 +46,15 @@ const ShippingCompanyUpdate = async (req, res, next) => {
         object: { _id: req.params.id, ...req.body },
       })
     );
+
+    await MQService.sendMessage(
+      'dock',
+      JSON.stringify({
+        eventType: 'shippingCompanyUpdated',
+        object: { _id: req.params.id, ...req.body },
+      })
+    );
+
     return res
       .status(200)
       .json({ _id: req.params.id, ...req.body })
@@ -56,10 +65,17 @@ const ShippingCompanyUpdate = async (req, res, next) => {
 const ShippingCompanyDelete = (req, res, next) => {
   ShippingCompany.findByIdAndRemove(req.params.id, async (err, shippingCompany) => {
     if (err) return next(err);
+
     await MQService.sendMessage(
       'company',
       JSON.stringify({ eventType: 'shippingCompanyRemoved', object: shippingCompany })
     );
+
+    await MQService.sendMessage(
+      'dock',
+      JSON.stringify({ eventType: 'shippingCompanyRemoved', object: shippingCompany })
+    );
+    
     return res.status(200).json('ShippingCompany removed.').end();
   });
 };
