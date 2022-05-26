@@ -14,10 +14,6 @@ const ShipReadSchema = new Schema({
 		type: Number,
 		required: true
 	},
-	batteryPercentage: {
-		type: Number,
-		required: true
-	},
 });
 
 const ShipRead = mongoose.model('shipRead', ShipReadSchema);

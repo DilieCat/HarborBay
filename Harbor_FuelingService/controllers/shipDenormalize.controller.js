@@ -9,7 +9,7 @@ const ShipCreate = (ship) => {
 };
 
 const ShipUpdate = (ship) => {
-  ShipRead.findByIdAndUpdate(ship._id, { $set: ship }, (err) => {
+  ShipRead.findByIdAndUpdate(fueltank._id, { $set: ship }, (err) => {
     if (err) console.error(err);
   });
 };

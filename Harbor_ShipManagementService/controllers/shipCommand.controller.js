@@ -5,7 +5,8 @@ const ShipCreate = (req, res, next) => {
   const newShip = new Ship({
     name: req.body.name,
     maxCapicityContainers: req.body.maxCapicityContainers,
-    fuelPercentage: req.body.fuelPercentage
+    fuelPercentage: req.body.fuelPercentage,
+    batteryPercentage: req.body.batteryPercentage
   });
 
   newShip.save(async (err) => {
@@ -21,6 +22,11 @@ const ShipCreate = (req, res, next) => {
       JSON.stringify({ eventType: 'createShip', object: newShip })
     );
 
+    await MQService.sendMessage(
+      'public',
+      JSON.stringify({ eventType: 'createShip', object: newShip })
+    );
+    
     await MQService.sendMessage(
       'dock',
       JSON.stringify({ eventType: 'createShip', object: newShip })

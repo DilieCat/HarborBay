@@ -18,6 +18,11 @@ const InboundCreate = (req, res, next) => {
       'harbor',
       JSON.stringify({ eventType: 'createInbound', object: newInbound })
     );
+
+    await MQService.sendMessage(
+      'public',
+      JSON.stringify({ eventType: 'createInbound', object: newInbound })
+    );
     
 
     return res.status(200).json(newInbound).end();

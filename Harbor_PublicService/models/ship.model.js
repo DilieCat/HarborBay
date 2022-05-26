@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const ShipReadSchema = new Schema({
+const SchipSchema = new Schema({
 	name: {
 		type: String,
 		required: true
@@ -14,12 +14,8 @@ const ShipReadSchema = new Schema({
 		type: Number,
 		required: true
 	},
-	batteryPercentage: {
-		type: Number,
-		required: true
-	},
 });
 
-const ShipRead = mongoose.model('shipRead', ShipReadSchema);
+const Ship = mongoose.model('ship', SchipSchema);
 
-module.exports = ShipRead;
+module.exports = Ship;

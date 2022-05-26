@@ -1,7 +1,7 @@
-const ShipRead = require('../models/shipRead.model');
+const Ship = require('../models/ship.model');
 
 const ShipCreate = (ship) => {
-  const shipNew = new ShipRead(ship);
+  const shipNew = new Ship(ship);
 
   shipNew.save((err) => {
     if (err) console.error(err);
@@ -9,13 +9,13 @@ const ShipCreate = (ship) => {
 };
 
 const ShipUpdate = (ship) => {
-  ShipRead.findByIdAndUpdate(ship._id, { $set: ship }, (err) => {
+  Ship.findByIdAndUpdate(fueltank._id, { $set: ship }, (err) => {
     if (err) console.error(err);
   });
 };
 
 const ShipDelete = (ship) => {
-  ShipRead.findByIdAndRemove(ship._id, (err) => {
+  Ship.findByIdAndRemove(ship._id, (err) => {
     if (err) console.error(err);
   });
 };

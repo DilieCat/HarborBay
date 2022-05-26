@@ -18,7 +18,11 @@ const OutboundCreate = (req, res, next) => {
       'harbor',
       JSON.stringify({ eventType: 'createOutbound', object: newOutbound })
     );
-    
+
+    await MQService.sendMessage(
+      'public',
+      JSON.stringify({ eventType: 'createOutbound', object: newOutbound })
+    );
 
     return res.status(200).json(newOutbound).end();
   });
