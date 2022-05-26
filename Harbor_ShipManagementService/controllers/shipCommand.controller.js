@@ -87,6 +87,14 @@ const ShipUpdate = async (req, res, next) => {
         object: { _id: req.params.id, ...req.body },
       })
     );
+
+    await MQService.sendMessage(
+      'harbor',
+      JSON.stringify({
+        eventType: 'updateShip',
+        object: { _id: req.params.id, ...req.body },
+      })
+    );
     
     return res
       .status(200)
@@ -116,6 +124,11 @@ const ShipDelete = (req, res, next) => {
 
     await MQService.sendMessage(
       'public',
+      JSON.stringify({ eventType: 'deleteShip', object: fueltank })
+    );
+
+    await MQService.sendMessage(
+      'harbor',
       JSON.stringify({ eventType: 'deleteShip', object: fueltank })
     );
 
