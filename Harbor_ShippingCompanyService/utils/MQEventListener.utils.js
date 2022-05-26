@@ -2,11 +2,10 @@ const amqp = require('amqplib/callback_api');
 
 
 const { MQ_URL } = process.env;
-const queue = 'dock';
+const queue = 'company';
 
-const rentalAgreementDenormalize = require('../controllers/rentalAgreement/rentalAgreementDenormalize.controller')
-const shipDenormalize = require('../controllers/ship/shipDenormalize.controller')
 const shippingCompanyDenormalize = require('../controllers/shippingCompany/shippingCompanyDenormalize.controller')
+const shipDenormalize = require('../controllers/ship/shipDenormalize.controller')
 
 
 
@@ -37,22 +36,18 @@ amqp.connect(MQ_URL, (connectionError, connection) => {
             case 'createShip':
               shipDenormalize.ShipCreate(object)
               break;
-            // Shipping Company events
+            // shippingCompany events
             case 'shippingCompanyCreated':
+              console.log("shippingCompanyCreated")
               shippingCompanyDenormalize.ShippingCompanyCreate(object)
               break;
-            // Rental Agreement events
-            case 'dockRented':
-              console.log("dockRented")
-              rentalAgreementDenormalize.RentalAgreementCreate(object)
+            case 'shippingCompanyUpdated':
+              console.log('shippingCompanyUpdated')
+              shippingCompanyDenormalize.ShippingCompanyUpdate(object)
               break;
-            case 'dockRentalUpdated':
-              console.log('dockRentalUpdated')
-              rentalAgreementDenormalize.RentalAgreementUpdate(object)
-              break;
-            case 'dockRentalCancelled':
-              console.log('dockRentalCancelled')
-              rentalAgreementDenormalize.RentalAgreementDelete(object)
+            case 'shippingCompanyRemoved':
+              console.log('shippingCompanyRemoved')
+              shippingCompanyDenormalize.ShippingCompanyDelete(object)
               break;
             default:
               console.warn('Event Type Unknown');

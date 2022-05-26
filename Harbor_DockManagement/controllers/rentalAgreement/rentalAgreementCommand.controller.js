@@ -4,6 +4,7 @@ const MQService = require('../../utils/MQService.utils');
 const RentalAgreementCreate = (req, res, next) => {
   const newRentalAgreement = new RentalAgreement({
     ship: req.body.ship,
+    shippingCompany: req.body.shippingCompany,
     dock: req.body.dock,
     dateArrival: req.body.dateArrival,
     dateDeparture: req.body.dateDeparture
@@ -14,7 +15,7 @@ const RentalAgreementCreate = (req, res, next) => {
 
     await MQService.sendMessage(
       'dock',
-      JSON.stringify({ eventType: 'createRentalAgreement', object: newRentalAgreement })
+      JSON.stringify({ eventType: 'dockRented', object: newRentalAgreement })
     );
     
       /*
@@ -37,9 +38,9 @@ const RentalAgreementUpdate = async (req, res, next) => {
     if (err) return next(err);
 
     await MQService.sendMessage(
-      'rentalAgreement',
+      'dock',
       JSON.stringify({
-        eventType: 'updateRentalAgreement',
+        eventType: 'dockRentalUpdated',
         object: { _id: req.params.id, ...req.body },
       })
     );
@@ -54,8 +55,8 @@ const RentalAgreementDelete = (req, res, next) => {
   RentalAgreement.findByIdAndRemove(req.params.id, async (err, rentalAgreement) => {
     if (err) return next(err);
     await MQService.sendMessage(
-      'rentalAgreement',
-      JSON.stringify({ eventType: 'deleteRentalAgreement', object: rentalAgreement })
+      'dock',
+      JSON.stringify({ eventType: 'dockRentalCancelled', object: rentalAgreement })
     );
     return res.status(200).json('RentalAgreement removed.').end();
   });

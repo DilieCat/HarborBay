@@ -120,7 +120,6 @@ services:
       - airport_rabbitmq
       - shipservice_management_db
 
-
   ### Dock Service ###
   dock_management_db:
     image: 'mongo'
@@ -142,6 +141,28 @@ services:
     depends_on:
       - airport_rabbitmq
       - dock_management_db
+
+  ### Shipping Company Service ###
+  shipping_company_management_db:
+    image: 'mongo'
+    container_name: 'shipping_company_management_db'
+    ports:
+      - '27025:27017'
+    volumes:
+      - ./conf/mongod.conf:/etc/mongod.conf
+    command: ["-f", "/etc/mongod.conf"]
+
+  shipping_company_management:
+    build: Harbor_ShippingCompanyService/.
+    container_name: 'shipping_company_management'
+    ports:
+      - '8096:8080'
+    environment:
+      - MONGO_URL=mongodb://shipping_company_management_db:27017/app_development
+      - MQ_URL=amqp://airport_rabbitmq:5672
+    depends_on:
+      - airport_rabbitmq
+      - shipping_company_management_db
 
   ### Airside mngmnt ###
   airside_db:

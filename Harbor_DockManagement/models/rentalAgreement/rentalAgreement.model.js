@@ -3,6 +3,7 @@ const Schema = mongoose.Schema;
 
 const RentalAgreementSchema = new Schema({
 	ship: {type: Schema.Types.ObjectId, ref: 'ship'},
+	shippingCompany: {type: Schema.Types.ObjectId, ref: 'shippingCompany'},
 	dock: {
 		type: Number,
 		required: true

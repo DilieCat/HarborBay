@@ -25,6 +25,11 @@ const ShipCreate = (req, res, next) => {
       'dock',
       JSON.stringify({ eventType: 'createShip', object: newShip })
     );
+
+    await MQService.sendMessage(
+      'company',
+      JSON.stringify({ eventType: 'createShip', object: newShip })
+    );
     
       /*
     await MQService.sendMessage(
