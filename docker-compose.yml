@@ -207,6 +207,28 @@ services:
       - airport_rabbitmq
       - shipping_company_management_db
 
+  ### Report Service ###
+  report_service_db:
+    image: 'mongo'
+    container_name: 'report_service__db'
+    ports:
+      - '27026:27017'
+    volumes:
+      - ./conf/mongod.conf:/etc/mongod.conf
+    command: ["-f", "/etc/mongod.conf"]
+
+  report_service:
+    build: Harbor_ReportService/.
+    container_name: 'report_service'
+    ports:
+      - '8097:8080'
+    environment:
+      - MONGO_URL=mongodb://report_service_db:27017/app_development
+      - MQ_URL=amqp://airport_rabbitmq:5672
+    depends_on:
+      - airport_rabbitmq
+      - report_service_db
+
   ### Airside mngmnt ###
   airside_db:
     image: 'mongo'
