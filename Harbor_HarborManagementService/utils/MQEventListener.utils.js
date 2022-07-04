@@ -1,15 +1,12 @@
 const amqp = require('amqplib/callback_api');
-
-
-const { MQ_URL } = process.env;
-const queue = 'harbor';
-
 const shipDenormalize = require('../controllers/shipDenormalize.controller')
 const inboundDenormalize = require('../controllers/inboundDenormalize.controller')
 const outboundDenormalize = require('../controllers/outboundDenormalize.controller')
 
+const eventStore = require('../models/eventStore.model');
 
-
+const { MQ_URL } = process.env;
+const queue = 'harbor';
 
 
 amqp.connect(MQ_URL, (connectionError, connection) => {
@@ -32,10 +29,21 @@ amqp.connect(MQ_URL, (connectionError, connection) => {
             message.content.toString()
           );
 
+      //store event to rebuild the state at a later time
+      const event = new eventStore({
+        sEventType: eventType,
+        sObject: object
+      });
+
+      event.save(async (err) => {
+        if (err) console.warn(err)
+
+        console.log(event)
+      });
           //console.warn(object) //debug
           //resolve the event type
           switch (eventType) {
-            //airplane events 
+            //Harbor Management events 
             case 'createShip':
               shipDenormalize.ShipCreate(object)
               break;
