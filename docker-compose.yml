@@ -229,6 +229,28 @@ services:
       - airport_rabbitmq
       - report_service_db
 
+  ### Container Service ###
+  container_service_db:
+    image: 'mongo'
+    container_name: 'container_service__db'
+    ports:
+      - '27010:27017'
+    volumes:
+      - ./conf/mongod.conf:/etc/mongod.conf
+    command: ["-f", "/etc/mongod.conf"]
+
+  container_service:
+    build: Harbor_ContainerService/.
+    container_name: 'container_service'
+    ports:
+      - '8110:8080'
+    environment:
+      - MONGO_URL=mongodb://report_service_db:27017/app_development
+      - MQ_URL=amqp://airport_rabbitmq:5672
+    depends_on:
+      - airport_rabbitmq
+      - container_service_db
+
   ### Airside mngmnt ###
   airside_db:
     image: 'mongo'

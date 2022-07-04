@@ -36,6 +36,11 @@ const ShipCreate = (req, res, next) => {
       'company',
       JSON.stringify({ eventType: 'createShip', object: newShip })
     );
+
+    await MQService.sendMessage(
+      'container',
+      JSON.stringify({ eventType: 'createShip', object: newShip })
+    );
     
       /*
     await MQService.sendMessage(
@@ -95,6 +100,14 @@ const ShipUpdate = async (req, res, next) => {
         object: { _id: req.params.id, ...req.body },
       })
     );
+
+    await MQService.sendMessage(
+      'container',
+      JSON.stringify({
+        eventType: 'updateShip',
+        object: { _id: req.params.id, ...req.body },
+      })
+    );
     
     return res
       .status(200)
@@ -129,6 +142,11 @@ const ShipDelete = (req, res, next) => {
 
     await MQService.sendMessage(
       'harbor',
+      JSON.stringify({ eventType: 'deleteShip', object: fueltank })
+    );
+
+    await MQService.sendMessage(
+      'container',
       JSON.stringify({ eventType: 'deleteShip', object: fueltank })
     );
 
