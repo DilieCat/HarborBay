@@ -36,6 +36,12 @@ amqp.connect(MQ_URL, (connectionError, connection) => {
             case 'createShip':
               shipDenormalize.ShipCreate(object)
               break;
+            case 'updateShip':
+              shipDenormalize.ShipUpdate(object)
+              break;
+            case 'deleteShip':
+              shipDenormalize.ShipDelete(object)
+              break;
             // shippingCompany events
             case 'shippingCompanyCreated':
               console.log("shippingCompanyCreated")

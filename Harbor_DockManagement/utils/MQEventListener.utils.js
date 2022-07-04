@@ -37,9 +37,24 @@ amqp.connect(MQ_URL, (connectionError, connection) => {
             case 'createShip':
               shipDenormalize.ShipCreate(object)
               break;
+            case 'updateShip':
+              shipDenormalize.ShipUpdate(object)
+              break;
+            case 'deleteShip':
+              shipDenormalize.ShipDelete(object)
+              break;
             // Shipping Company events
             case 'shippingCompanyCreated':
+              console.log("shippingCompanyCreated")
               shippingCompanyDenormalize.ShippingCompanyCreate(object)
+              break;
+            case 'shippingCompanyUpdated':
+              console.log('shippingCompanyUpdated')
+              shippingCompanyDenormalize.ShippingCompanyUpdate(object)
+              break;
+            case 'shippingCompanyRemoved':
+              console.log('shippingCompanyRemoved')
+              shippingCompanyDenormalize.ShippingCompanyDelete(object)
               break;
             // Rental Agreement events
             case 'dockRented':

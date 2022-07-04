@@ -43,10 +43,18 @@ amqp.connect(MQ_URL, (connectionError, connection) => {
           //console.warn(object) //debug
           //resolve the event type
           switch (eventType) {
-            //Harbor Management events 
+            //Harbor Management events
+
             case 'createShip':
               shipDenormalize.ShipCreate(object)
               break;
+            case 'updateShip':
+              shipDenormalize.ShipUpdate(object)
+              break;
+            case 'deleteShip':
+              shipDenormalize.ShipDelete(object)
+              break;
+            // inbound events
             case 'createInbound':
               inboundDenormalize.InboundCreate(object)
               break;
@@ -56,6 +64,7 @@ amqp.connect(MQ_URL, (connectionError, connection) => {
             case 'deleteInbound':
               inboundDenormalize.InboundDelete(object)
               break;
+            // outbound events
             case 'createOutbound':
               outboundDenormalize.OutboundCreate(object)
               break;

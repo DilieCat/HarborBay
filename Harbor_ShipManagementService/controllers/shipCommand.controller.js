@@ -63,6 +63,39 @@ const ShipUpdate = async (req, res, next) => {
         object: { _id: req.params.id, ...req.body },
       })
     );
+
+    await MQService.sendMessage(
+      'dock',
+      JSON.stringify({
+        eventType: 'updateShip',
+        object: { _id: req.params.id, ...req.body },
+      })
+    );
+
+    await MQService.sendMessage(
+      'company',
+      JSON.stringify({
+        eventType: 'updateShip',
+        object: { _id: req.params.id, ...req.body },
+      })
+    );
+
+    await MQService.sendMessage(
+      'public',
+      JSON.stringify({
+        eventType: 'updateShip',
+        object: { _id: req.params.id, ...req.body },
+      })
+    );
+
+    await MQService.sendMessage(
+      'harbor',
+      JSON.stringify({
+        eventType: 'updateShip',
+        object: { _id: req.params.id, ...req.body },
+      })
+    );
+    
     return res
       .status(200)
       .json({ _id: req.params.id, ...req.body })
@@ -73,10 +106,32 @@ const ShipUpdate = async (req, res, next) => {
 const ShipDelete = (req, res, next) => {
   Ship.findByIdAndRemove(req.params.id, async (err, fueltank) => {
     if (err) return next(err);
+
     await MQService.sendMessage(
       'ship',
       JSON.stringify({ eventType: 'deleteShip', object: fueltank })
     );
+
+    await MQService.sendMessage(
+      'dock',
+      JSON.stringify({ eventType: 'deleteShip', object: fueltank })
+    );
+
+    await MQService.sendMessage(
+      'company',
+      JSON.stringify({ eventType: 'deleteShip', object: fueltank })
+    );
+
+    await MQService.sendMessage(
+      'public',
+      JSON.stringify({ eventType: 'deleteShip', object: fueltank })
+    );
+
+    await MQService.sendMessage(
+      'harbor',
+      JSON.stringify({ eventType: 'deleteShip', object: fueltank })
+    );
+
     return res.status(200).json('Ship removed.').end();
   });
 };
