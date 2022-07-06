@@ -39,6 +39,15 @@ const InboundUpdate = async (req, res, next) => {
         object: { _id: req.params.id, ...req.body },
       })
     );
+
+    await MQService.sendMessage(
+      'public',
+      JSON.stringify({
+        eventType: 'updateInbound',
+        object: { _id: req.params.id, ...req.body },
+      })
+    );
+
     return res
       .status(200)
       .json({ _id: req.params.id, ...req.body })
@@ -53,6 +62,12 @@ const InboundDelete = (req, res, next) => {
       'harbor',
       JSON.stringify({ eventType: 'deleteInbound', object: inbound })
     );
+
+    await MQService.sendMessage(
+      'public',
+      JSON.stringify({ eventType: 'deleteInbound', object: inbound })
+    );
+
     return res.status(200).json('Inbound ship removed.').end();
   });
 };
