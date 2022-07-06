@@ -68,10 +68,8 @@ const OutboundDelete = async (outbound) => {
 
 
 function emptyRebuiltStore() {
-    fueltanks = [];
-    runways = [];
-    taxiways = [];
-    airplanes = [];
+    inbounds = [];
+    outbounds = [];
 };
 
 module.exports = {
