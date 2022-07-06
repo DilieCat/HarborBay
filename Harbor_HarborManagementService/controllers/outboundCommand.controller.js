@@ -38,6 +38,15 @@ const OutboundUpdate = async (req, res, next) => {
         object: { _id: req.params.id, ...req.body },
       })
     );
+
+    await MQService.sendMessage(
+      'public',
+      JSON.stringify({
+        eventType: 'updateOutbound',
+        object: { _id: req.params.id, ...req.body },
+      })
+    );
+
     return res
       .status(200)
       .json({ _id: req.params.id, ...req.body })
@@ -52,6 +61,12 @@ const OutboundDelete = (req, res, next) => {
       'harbor',
       JSON.stringify({ eventType: 'deleteOutbound', object: Outbound })
     );
+
+    await MQService.sendMessage(
+      'public',
+      JSON.stringify({ eventType: 'deleteOutbound', object: Outbound })
+    );
+
     return res.status(200).json('Outbound ship removed.').end();
   });
 };
